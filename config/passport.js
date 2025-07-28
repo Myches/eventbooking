@@ -1,7 +1,10 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import db from './db.js';
+import dotenv from "dotenv";
 
+
+dotenv.config();
 // Ensure JWT_SECRET is defined
 if (!process.env.JWT_SECRET) {
     console.error('Error: JWT_SECRET is not defined in environment variables');
