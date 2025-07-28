@@ -157,10 +157,14 @@ const deleteBooking = async (req, res) => {
     }
 };
 
+
+
 export default {
     createBooking,
     retrieveAllBooking,
     retrieveBooking,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+  
+   
 };

@@ -89,10 +89,45 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+//search for an event
+const searchEvents = async (req, res) => {
+    const { q } = req.query; // Get search term from query parameter
+
+    // Validate search term
+    if (!q || q.trim() === '') {
+        return res.status(400).json({ error: 'Search term is required' });
+    }
+
+    try {
+        // Use ILIKE for case-insensitive search
+        const result = await db.query(
+            `SELECT * FROM events 
+             WHERE name ILIKE $1 
+             OR description ILIKE $1 
+             OR location ILIKE $1`,
+            [`%${q.trim()}%`] // Add wildcards for partial matching
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'No events found' });
+        }
+
+        res.status(200).json({
+            message: 'Events found successfully',
+            events: result.rows
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error searching events' });
+    }
+};
+
+
 export default {
     createEvent,
     retrieveAllEvent,
     retrieveEvent,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    searchEvents
 };
