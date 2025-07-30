@@ -1,12 +1,11 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import db from './db.js';
-
+// auth.js
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6' 
+    secretOrKey: process.env.JWT_SECRET 
 };
-
 passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
         try {

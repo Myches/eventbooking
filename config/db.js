@@ -25,4 +25,9 @@ if (process.env.NODE_ENV === "production" || process.env.DATABASE_URL) {
   });
 }
 
+// Test the connection
+db.query('SELECT NOW()')
+  .then(() => console.log('Database connected successfully'))
+  .catch(err => console.error('Database connection error:', err));
+
 export default db;

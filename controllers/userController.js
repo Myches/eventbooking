@@ -57,10 +57,15 @@ const register = async (req, res) => {
             token,
             roles: allowedRoles 
         });
-    } catch (error) {
-        console.error('Registration error:', error);
-        return res.status(500).json({ error: 'Error while registering user' });
-    }
+    } // In login function
+catch (err) {
+    console.error('Register error details:', {
+        error: err,
+        timestamp: new Date(),
+        emailAttempted: email
+    });
+    res.status(500).json({ error: 'Database error' });
+}
 };
 
 const login = async (req, res) => {
@@ -97,10 +102,15 @@ const login = async (req, res) => {
             },
             token
         });
-    } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).json({ error: 'Database error' });
-    }
+    } // In login function
+catch (err) {
+    console.error('Login error details:', {
+        error: err,
+        timestamp: new Date(),
+        emailAttempted: email
+    });
+    res.status(500).json({ error: 'Database error' });
+}
 };
 
 const getProfile = async (req, res) => {
