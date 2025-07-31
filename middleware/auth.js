@@ -1,5 +1,5 @@
 import passport from '../config/passport.js';
-
+import jwt from 'jsonwebtoken';
 
 export const authenticateJWT = (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
@@ -8,6 +8,21 @@ export const authenticateJWT = (req, res, next) => {
         }
         
         if (!user) {
+            // Check if token is expired
+            const authHeader = req.headers.authorization;
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                const token = authHeader.substring(7);
+                try {
+                    jwt.verify(token, process.env.JWT_SECRET);
+                } catch (error) {
+                    if (error.name === 'TokenExpiredError') {
+                        return res.status(401).json({ 
+                            error: 'Token expired',
+                            code: 'TOKEN_EXPIRED'
+                        });
+                    }
+                }
+            }
             return res.status(401).json({ error: 'Unauthorized access' });
         }
         

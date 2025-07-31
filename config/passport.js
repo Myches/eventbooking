@@ -1,24 +1,23 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import db from './db.js';
-// auth.js
+
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET 
+    secretOrKey: process.env.JWT_SECRET
 };
+
 passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
         try {
-            // Log the payload for debugging
             console.log('JWT Payload:', jwt_payload);
-
-            // Query the database for the user
+            
             const result = await db.query('SELECT id, name, email, role FROM users WHERE id = $1', [jwt_payload.id]);
-
+            
             if (result.rows.length > 0) {
                 return done(null, result.rows[0]);
             } else {
-                return done(null, false); // User not found
+                return done(null, false);
             }
         } catch (error) {
             console.error('JWT Strategy error:', error);
